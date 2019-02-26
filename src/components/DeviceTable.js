@@ -14,8 +14,7 @@ export default class DeviceTable extends Component {
         </div>
         <div>
             {tags.map(tag => {
-            const value = tag.value;
-            return <Tag color={tag.color} key={value} onClick={this.props.onTagClick} >{value}</Tag>;
+            return <Tag color={tag.color} key={tag.key.concat(tag.value)} onClick={this.props.onTagClick} >{tag.key.concat(": ", tag.value)}</Tag>;
             })}
         </div>
       </div>
@@ -24,6 +23,7 @@ export default class DeviceTable extends Component {
     title: 'Zuletzt editiert',
     dataIndex: 'lastedited',
     key: 'last',
+    sorter: 'true',
     render: lastedited => (
       <span>
         {lastedited}

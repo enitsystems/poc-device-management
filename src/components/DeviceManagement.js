@@ -7,11 +7,11 @@ const data = [{
   name: 'Röhrer',
   lastedited: '11.11.2019 11:11',
   tags: [{
-      // 'key':'Ort',
+      'key':'Ort',
       'value': 'Gebäude A',
       'color': 'red', 
     }, {
-      // 'key':'Kostenstelle',
+      'key':'Kostenstelle',
       'value': '1337',
       'color': 'blue', 
       } 
@@ -21,11 +21,11 @@ const data = [{
   name: 'Rährer',
   lastedited: '11.11.2019 11:11',
   tags: [{
-      // 'key':'Ort',
+      'key':'Ort',
       'value': 'Gebäude B',
       'color': 'red', 
     }, {
-      // 'key':'Kostenstelle',
+      'key':'Kostenstelle',
       'value': '1337',
       'color': 'blue', 
       } 
@@ -35,11 +35,11 @@ const data = [{
   name: 'Rührer',
   lastedited: '11.11.2019 11:11',
   tags: [{
-      // 'key':'Ort',
+      'key':'Ort',
       'value': 'Gebäude A',
       'color': 'red', 
     }, {
-      // 'key':'Kostenstelle',
+      'key':'Kostenstelle',
       'value': '42',
       'color': 'blue', 
       } 
@@ -49,25 +49,21 @@ const data = [{
   name: 'Kneter',
   lastedited: '11.11.2019 11:11',
   tags: [{
-      // 'key':'Ort',
+      'key':'Ort',
       'value': 'Gebäude A',
       'color': 'red', 
-    }, {
-      // 'key':'Kostenstelle',
-      'value': '1337',
-      'color': 'blue', 
-      } 
+    },
   ],
 }, {
   key: '5',
   name: 'Stampfmaschine',
   lastedited: '11.11.2019 11:11',
   tags: [{
-      // 'key':'Ort',
+      'key':'Ort',
       'value': 'Gebäude B',
       'color': 'red', 
     }, {
-      // 'key':'Kostenstelle',
+      'key':'Kostenstelle',
       'value': '1337',
       'color': 'blue', 
       } 
@@ -77,18 +73,16 @@ const data = [{
   name: 'Backofen',
   lastedited: '11.11.2019 11:11',
   tags: [{
-      // 'key':'Ort',
+      'key':'Ort',
       'value': 'Gebäude B',
       'color': 'red', 
     }, {
-      // 'key':'Kostenstelle',
+      'key':'Kostenstelle',
       'value': '42',
       'color': 'blue', 
       } 
   ],
 }];
-
-
 
 export default class DeviceManagement extends Component {
   constructor(props){
@@ -100,6 +94,7 @@ export default class DeviceManagement extends Component {
   }
 
   handleSearchInputChange = (filterText) => {
+    console.log("Text: " + filterText);
     this.setState(state => ({
       filterText: filterText,
     }));
@@ -112,6 +107,7 @@ export default class DeviceManagement extends Component {
   }
 
   handleSelect = (filterCategory) => {
+    console.log("Select: " + filterCategory);
     if(filterCategory !== this.state.filterText){
       this.setState(state => ({
         filterCategories: this.state.filterCategories.concat(filterCategory),
@@ -120,6 +116,7 @@ export default class DeviceManagement extends Component {
   }
 
   handleDeselect = (filterCategory) => {
+    console.log("Deselect: " + filterCategory);
     this.setState(state => ({
       filterCategories: this.state.filterCategories.filter(category => category !== filterCategory),
     }))
@@ -127,6 +124,7 @@ export default class DeviceManagement extends Component {
 
   handleTagClick = (tag) => {
     const tagText = tag.target.textContent;
+    console.log("Tag-Click: " + tagText);
     if(this.state.filterCategories.indexOf(tagText) === -1){
       this.setState(state => ({
         filterCategories: this.state.filterCategories.concat(tagText),
@@ -138,7 +136,15 @@ export default class DeviceManagement extends Component {
     const filteredDevices = data
       .filter(device => {
         return (this.state.filterText === '' ? true : device.name.includes(this.state.filterText)) 
-          && (this.state.filterCategories.length === 0 ? true : this.state.filterCategories.every(category => device.tags.some(tag => tag.value === category)));
+          && (this.state.filterCategories.length === 0 ? true : this.state.filterCategories.every(
+            category => device.tags.some(
+              tag => {
+                if(category.split(':').length > 1){
+                  return (tag.key === category.split(':')[0] && tag.value === category.split(':')[1].substr(1));
+                } else {
+                  return tag.key === category;
+                }
+              })));
       });
 
     return (
