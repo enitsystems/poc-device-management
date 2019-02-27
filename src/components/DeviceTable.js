@@ -33,7 +33,19 @@ export default class DeviceTable extends Component {
   
   render() {
     return(
-      <Table style={{ whiteSpace: 'pre'}} columns={this.columns} dataSource={this.props.data} pagination={false} />
+      <Table 
+        style={{ whiteSpace: 'pre'}} 
+        columns={this.columns} 
+        dataSource={this.props.data} 
+        pagination={false}
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: (event) => {
+              console.log(record);
+            },     
+          };
+        }}
+        />
     );
   }
 

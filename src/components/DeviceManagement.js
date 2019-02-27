@@ -18,7 +18,7 @@ const data = [{
         'key':'Vorarbeiter',
         'value': 'Klaus',
         'color': 'green', 
-      },
+      }, 
   ],
 }, {
   key: '2',
@@ -161,7 +161,7 @@ export default class DeviceManagement extends Component {
 
   render() {
     const freeTextSearch = [];
-    this.state.filterCategories.filter(category => {
+    this.state.filterCategories.forEach(category => {
       if(category.includes('Freitext')){
         freeTextSearch.push(category.substr(10));
       }
@@ -186,7 +186,7 @@ export default class DeviceManagement extends Component {
       });
 
     return (
-      <div>
+      <div >
         <DeviceSearch 
           data={data} 
           filterText={this.state.filterText} 
