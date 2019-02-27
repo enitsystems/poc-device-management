@@ -136,7 +136,12 @@ export default class DeviceManagement extends Component {
       this.setState(state => ({
         filterCategories: this.state.filterCategories.concat(filterCategory),
       }))
-    } 
+    } else {
+      const textSearchCategory = 'Freitext: ' + filterCategory;
+      this.setState(state => ({
+        filterCategories: this.state.filterCategories.concat(textSearchCategory),
+      }))
+    }
   }
 
   handleDeselect = (filterCategory) => {
@@ -155,10 +160,21 @@ export default class DeviceManagement extends Component {
   }
 
   render() {
+    const freeTextSearch = [];
+    this.state.filterCategories.filter(category => {
+      if(category.includes('Freitext')){
+        freeTextSearch.push(category.substr(10));
+      }
+    });
+
     const filteredDevices = data
       .filter(device => {
-        return (this.state.filterText === '' ? true : device.name.includes(this.state.filterText)) 
-          && (this.state.filterCategories.length === 0 ? true : this.state.filterCategories.every(
+        return (
+          (this.state.filterText !== '' ? device.name.includes(this.state.filterText) : freeTextSearch.length === 0 ||  
+            freeTextSearch.some(searchText => device.name.includes(searchText)))          
+          && (this.state.filterCategories.length === 0 ? true : this.state.filterCategories
+            .filter(category => !category.includes('Freitext'))
+            .every(
             category => device.tags.some(
               tag => {
                 if(category.split(':').length > 1){
@@ -166,7 +182,7 @@ export default class DeviceManagement extends Component {
                 } else {
                   return tag.key === category;
                 }
-              })));
+              }))));
       });
 
     return (
